@@ -16,23 +16,23 @@ const getRandomNumber = (minNum, maxNum, lengthNum = 0) => {
 };
 getRandomNumber();
 
-// Проверка длины строки
-const checkLengthString = (string, maxLength) => {
-  if (string.length <= maxLength) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
-checkLengthString();
-
-// Функция Академии по проверке длины строки
-function checkStringLength (string, length) {
-  return string.length <= length;
-}
-
-checkStringLength();
+// // Проверка длины строки
+// const checkLengthString = (string, maxLength) => {
+//   if (string.length <= maxLength) {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// };
+//
+// checkLengthString();
+//
+// // Функция Академии по проверке длины строки
+// function checkStringLength (string, length) {
+//   return string.length <= length;
+// }
+//
+// checkStringLength();
 
 // module4-task1
 // Количество необходимых объектов для генерации
@@ -124,3 +124,36 @@ const NAMES = [
   'Эрнест',
   'Гурген',
 ];
+
+// Пустой массив идентификаторов описания
+const arrayId = [];
+
+// Пустой массив с картинками
+const arrayPhotos = [];
+
+// Счётчик заполнения пустого массива идентификаторами описаний
+for (let idItemCounter = 1; idItemCounter <= QUANTITY_DESCRIPTIONS_PHOTOS; idItemCounter++) {
+  arrayId.push(idItemCounter);
+}
+
+// Счётчик заполнения пустого массива картинками
+for (let photoItemCounter = 1; photoItemCounter <= QUANTITY_DESCRIPTIONS_PHOTOS; photoItemCounter++) {
+  arrayPhotos.push(`photos/${photoItemCounter}.jpg`);
+}
+
+// Вырезание/удаление случайного элемента из заполненного массива
+const cutRandomElementArray = function (someArray) {
+  return someArray.splice(getRandomNumber(0, someArray.length - 1), 1);
+};
+
+
+// Функция генерации объектов
+const createPhotos = function () {
+  return {
+    id: `${cutRandomElementArray(arrayId)}`,
+    url: `${cutRandomElementArray(arrayPhotos)}`,
+  };
+};
+
+const listPhotos = new Array(QUANTITY_DESCRIPTIONS_PHOTOS).fill(null).map(() => createPhotos());
+console.log(listPhotos);
