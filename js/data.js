@@ -168,5 +168,6 @@ const createPhotos = function () {
 };
 
 const listPhotos = new Array(QUANTITY_DESCRIPTIONS_PHOTOS).fill(null).map(() => createPhotos());
-listPhotos; // Чтобы eslint не ругался, что listPhotos не используется
 // console.log(listPhotos);
+
+export {listPhotos};
