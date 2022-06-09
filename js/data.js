@@ -168,6 +168,5 @@ const createPhotos = function () {
 };
 
 const listPhotos = new Array(QUANTITY_DESCRIPTIONS_PHOTOS).fill(null).map(() => createPhotos());
-// console.log(listPhotos);
 
 export {listPhotos};
