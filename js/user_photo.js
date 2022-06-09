@@ -22,4 +22,4 @@ photosUsersList.forEach(({url, likes, comments}) => {
 // Вставил заполненный documentFragment в блок .pictures
 picturesContainer.appendChild(photosUsersFragment);
 
-export {photosUsersList};
+export {photosUsersList, picturesContainer};

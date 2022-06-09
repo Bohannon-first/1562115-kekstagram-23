@@ -1,4 +1,5 @@
 import {photosUsersList} from './user_photo.js';
+import {isEscEvent, isOverlayClick} from './util.js';
 
 const bigPicture = document.querySelector('.big-picture');
 const pictures = document.querySelectorAll('.picture');
@@ -10,6 +11,22 @@ const socialCaption = bigPicture.querySelector('.social__caption');
 const socialCommentCount = bigPicture.querySelector('.social__comment-count');
 const commentLoader = bigPicture.querySelector('.comments-loader');
 const bigPictureBtnClose = bigPicture.querySelector('.big-picture__cancel');
+
+// Проверка на нажатую кнопку Esc и закрытие полноэкранной фотографии
+const onBigPictureEscKeydown = (evt) => {
+  if (isEscEvent(evt)) {
+    evt.preventDefault();
+    bigPictureClose();
+  }
+};
+
+// Проверка по клику на оверлей и закрытие полноэкранной фотографии
+const onBigPictureOverlayClick = (evt) => {
+  if (isOverlayClick(evt)) {
+    evt.preventDefault();
+    bigPictureClose();
+  }
+};
 
 // Получаю из массива комментарии, создаю разметку и вставляю их под фото
 const getComments = (array) => {
@@ -46,6 +63,9 @@ const showBigPicture = (photo) => {
       commentLoader.classList.add('hidden');
       document.querySelector('body').classList.add('modal-open');
       getComments(currentPhoto.comments);
+
+      document.addEventListener('keydown', onBigPictureEscKeydown);
+      document.addEventListener('click', onBigPictureOverlayClick);
     }
   }
 };
@@ -61,30 +81,19 @@ pictures.forEach((picture) => {
 });
 
 // Функция закрытия полноэкранной фотографии
-const bigPictureClose = () => {
+function bigPictureClose () {
   bigPicture.classList.add('hidden');
   socialCommentCount.classList.remove('hidden');
   commentLoader.classList.remove('hidden');
   document.querySelector('body').classList.remove('modal-open');
-};
+
+  document.removeEventListener('keydown', onBigPictureEscKeydown);
+  document.removeEventListener('click', onBigPictureOverlayClick);
+}
 
 //  Обработчик закрытия полноэкранной фотографии по клику на крестик
 bigPictureBtnClose.addEventListener('click', () => {
   bigPictureClose();
 });
 
-// Закрытие полноэкранной фотографии на кнопку Esc
-window.addEventListener('keydown', (evt) => {
-  if (evt.keyCode === 27) {
-    if (!bigPicture.classList.contains('hidden')) {
-      bigPictureClose();
-    }
-  }
-});
-
-// Закрытие полноэкранной фотографии по клику на оверлей
-bigPicture.addEventListener('click', (evt) => {
-  if (evt.target === bigPicture) {
-    bigPictureClose();
-  }
-});
+export {bigPicture};

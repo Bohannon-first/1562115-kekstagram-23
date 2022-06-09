@@ -1,3 +1,5 @@
+import {bigPicture} from './big_photo.js';
+
 // Получение рандомного числа из диапазона
 const getRandomNumber = (minNum, maxNum, lengthNum = 0) => {
   if (minNum < 0) {
@@ -16,7 +18,7 @@ const getRandomNumber = (minNum, maxNum, lengthNum = 0) => {
 };
 getRandomNumber();
 
-// // Проверка длины строки - моя функция
+// Проверка длины строки - моя функция
 // const checkLengthString = (string, maxLength) => {
 //   if (string.length <= maxLength) {
 //     return true;
@@ -24,7 +26,7 @@ getRandomNumber();
 //     return false;
 //   }
 // };
-// checkLengthString();
+// // checkLengthString();
 
 // // Проверка длины строки - функция Академии
 // function checkStringLength (string, length) {
@@ -33,4 +35,8 @@ getRandomNumber();
 
 // checkStringLength();
 
-export {getRandomNumber};
+// Проверка на нажатую кнопку Esc
+const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+const isOverlayClick = (evt) => evt.target === bigPicture;
+
+export {getRandomNumber, isEscEvent, isOverlayClick};
