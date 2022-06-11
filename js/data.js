@@ -48,7 +48,7 @@ const ID_COMMENT = {
 // Количество аватарок пользователей
 const AVATARS = {
   MIN: 1,
-  MAX: 6,
+  MAX: 20,
 };
 
 // Список комментариев к фотографиям
@@ -114,13 +114,25 @@ for (let idItemCounter = ID_COMMENT.MIN; idItemCounter <= ID_COMMENT.MAX; idItem
   arrayIdComments.push(idItemCounter);
 }
 
+// Закомментировано т.к. при таком коде появляются пустые аватарки комментаторов
 // Массив аватаров
-const arrayAvatars = [];
+// const arrayAvatars = [];
 
-// Счётчик заполнения массива аватаров
-for (let avatarItemCounter = AVATARS.MIN; avatarItemCounter <= AVATARS.MAX; avatarItemCounter++) {
-  arrayAvatars.push(`img/avatar-${avatarItemCounter}.svg`);
-}
+// // Счётчик заполнения массива аватаров
+// for (let avatarItemCounter = AVATARS.MIN; avatarItemCounter <= AVATARS.MAX; avatarItemCounter++) {
+//   arrayAvatars.push(`img/avatar-${avatarItemCounter}.svg`);
+// }
+
+// Новый временный код для массива аватаров, чтобы не было пустых аватарок
+const arrayAvatars = [
+  'img/avatar-1.svg',
+  'img/avatar-2.svg',
+  'img/avatar-3.svg',
+  'img/avatar-4.svg',
+  'img/avatar-5.svg',
+  'img/avatar-6.svg',
+];
+// Новый временный код для массива аватаров, чтобы не было пустых аватарок
 
 // Вырезание/удаление случайного элемента из заполненного массива
 const cutRandomElementArray = function (someArray) {
