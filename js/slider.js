@@ -1,4 +1,4 @@
-import {uploadImgForm, imgUploadPreview} from './form.js';
+import {uploadImgForm, imgUploadPreview, valueScaleInput, SCALE_CONTROL} from './form.js';
 
 const sliderContainer = uploadImgForm.querySelector('.img-upload__effect-level');
 const sliderElement = uploadImgForm.querySelector('.effect-level__slider');
@@ -6,6 +6,7 @@ const sliderValueEffect = uploadImgForm.querySelector('.effect-level__value');
 const effectsList = uploadImgForm.querySelector('.effects__list');
 const elementEffectNone = uploadImgForm.querySelector('#effect-none');
 
+// Массив с классами фильтров для фотографий
 const EFFECT_CLASSES_DICTIONARY = {
   'chrome': 'effects__preview--chrome',
   'sepia': 'effects__preview--sepia',
@@ -14,6 +15,16 @@ const EFFECT_CLASSES_DICTIONARY = {
   'heat': 'effects__preview--heat',
 };
 
+// Массив с фильтрами для фотографий
+const EFFECT_FILTERS_DICTIONARY = {
+  'chrome': 'grayscale',
+  'sepia': 'sepia',
+  'marvin': 'invert',
+  'phobos': 'blur',
+  'heat': 'brightness',
+};
+
+// Переопределение поведения слайдера при разных фильтрах
 const movingSlider = (filterValue) => {
   if (filterValue === 'chrome') {
     sliderElement.noUiSlider.updateOptions({
@@ -60,8 +71,6 @@ const movingSlider = (filterValue) => {
       start: 3,
       step: 0.1
     });
-  } else {
-    // sliderElement.noUiSlider.destroy();
   }
 };
 
@@ -77,11 +86,34 @@ const isOriginalEffect = () => {
 
 // Сброс всех значений фильтров при переключении
 const resetFilterValues = () => {
-  imgUploadPreview.className = '';
+  imgUploadPreview.removeAttribute('class');
+  imgUploadPreview.removeAttribute('style');
+  valueScaleInput.setAttribute('value', `${SCALE_CONTROL.MAX}%`);
 };
 
-let imgWidthSelectedFilter;
+// Изменение интенсивности выбранного фильтра/эффекта ползунком
+const changeFilterEffect = (photo, nameFilter) => {
+  sliderElement.noUiSlider.on('update', (values, handle) => {
+    let valueEffect = '';
+    if (nameFilter === 'marvin') {
+      valueEffect = `${values[handle]}%`;
+    } else if (nameFilter === 'phobos') {
+      valueEffect = `${values[handle]}px`;
+    } else {
+      valueEffect = values[handle];
+    }
 
+    const digitsOnly = valueEffect.replace(/[^0-9.]/g, '');
+    sliderValueEffect.setAttribute('value', digitsOnly);
+    for (const filter in EFFECT_FILTERS_DICTIONARY) {
+      if (nameFilter === filter) {
+        photo.style.filter = `${EFFECT_FILTERS_DICTIONARY[filter]}(${valueEffect})`;
+      }
+    }
+  });
+};
+
+// Переключение фильтров при кликах
 const onEffectsListClick = (evt) => {
   resetFilterValues();
   isOriginalEffect();
@@ -89,24 +121,18 @@ const onEffectsListClick = (evt) => {
     const value = evt.target.value;
     for (const effect in EFFECT_CLASSES_DICTIONARY) {
       if (value === effect) {
-        imgUploadPreview.classList.add(`${EFFECT_CLASSES_DICTIONARY[effect]}`);
-        imgWidthSelectedFilter = imgUploadPreview;
-        // imgUploadPreview.style.filter = `grayscale(${+sliderValueEffect.getAttribute('value')})`;
-        // const cssStyle = getComputedStyle(imgUploadPreview);
-        // console.log(cssStyle);
+        movingSlider(value);
+        imgUploadPreview.classList.add(EFFECT_CLASSES_DICTIONARY[effect]);
+        changeFilterEffect(imgUploadPreview, value);
       }
     }
-    movingSlider(value);
-    // imgUploadPreview.style.filter = sliderValueEffect.getAttribute('value');
-    // const valueFilter = sliderValueEffect.getAttribute('value');
-    // console.log(sliderValueEffect.getAttribute('value'));
   }
-  // console.log(imgWidthSelectedFilter);
 };
 
 // Обработчик на родительский контейнер всех фильтров с делегированием
 effectsList.addEventListener('change', onEffectsListClick);
 
+// Создаем слайдер
 noUiSlider.create(sliderElement, {
   range: {
     min: 0,
@@ -120,23 +146,11 @@ noUiSlider.create(sliderElement, {
         return value.toFixed(0);
       }
       return value.toFixed(1);
-      // return Math.round(value);
     },
     from: function (value) {
       return parseFloat(value);
-      // return Math.round(value);
     },
   },
-});
-
-// let valueEffect;
-sliderElement.noUiSlider.on('update', (values, handle) => {
-  const valueEffect = values[handle];
-  sliderValueEffect.setAttribute('value', valueEffect);
-  imgWidthSelectedFilter.style.filter = `grayscale(${+sliderValueEffect.getAttribute('value')})`;
-
-  console.log(+sliderValueEffect.getAttribute('value'));
-  // sliderValueEffect.setAttribute('value', `${values[handle]}`);
 });
 
 export {resetFilterValues, isOriginalEffect};

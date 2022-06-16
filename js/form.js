@@ -167,4 +167,4 @@ const onInputDescriptionValid = () => {
 
 inputDescription.addEventListener('input', onInputDescriptionValid);
 
-export {uploadImgForm, imgUploadPreview};
+export {uploadImgForm, imgUploadPreview, valueScaleInput, SCALE_CONTROL};
