@@ -1,18 +1,70 @@
 import {picturesContainer} from './user_photo.js';
 import {isEscEvent} from './util.js';
+import {resetFilterValues, isOriginalEffect} from './slider.js';
 
 const MAX_LENGHT_HASHTAG = 20;
 const MAX_HASHTAG_NUMBERS = 5;
 const MAX_LENGTH_TEXT_DESCRIPTION = 140;
 
+// Управлением масштабом фотографии
+const SCALE_CONTROL = {
+  MIN: 25,
+  MIDDLE: 50,
+  HIGH: 75,
+  MAX: 100,
+  STEP: 25,
+};
+
+// Переменные загрузки и валидации полей ввода
 const uploadImgInput = document.querySelector('#upload-file');
 const uploadImgForm = picturesContainer.querySelector('.img-upload__overlay');
 const uploadBtnClose = uploadImgForm.querySelector('#upload-cancel');
 const inputHashtag = uploadImgForm.querySelector('.text__hashtags');
 const inputDescription = uploadImgForm.querySelector('.text__description');
 
+// Переменные для редактирования изображения
+const btnSmallerScale = uploadImgForm.querySelector('.scale__control--smaller');
+const btnBiggerScale = uploadImgForm.querySelector('.scale__control--bigger');
+const valueScaleInput = uploadImgForm.querySelector('.scale__control--value');
+const imgUploadPreview = uploadImgForm.querySelector('.img-upload__preview img');
+
 // Шаблон регулярного выражения
 const templateHashtagCommon = /(^#[A-Za-zА-ЯЁа-яё0-9]{0,}$)s*/;
+
+// Функция уменьшения/увеличения масштаба фотографии
+const setScale = (value) => {
+  if (value === SCALE_CONTROL.MIN) {
+    imgUploadPreview.style.transform = 'scale(0.25)';
+  } else if (value === SCALE_CONTROL.MIDDLE) {
+    imgUploadPreview.style.transform = 'scale(0.50)';
+  } else if (value === SCALE_CONTROL.HIGH) {
+    imgUploadPreview.style.transform = 'scale(0.75)';
+  } else if (value === SCALE_CONTROL.MAX){
+    imgUploadPreview.style.transform = 'scale(1)';
+  }
+};
+
+// Обработчик клика уменьшения масштаба фотографии
+const onBtnSmallerScaleClick = () => {
+  const currentValue = Number(valueScaleInput.getAttribute('value').replace('%', ''));
+  let valueMin = '';
+  if (currentValue <= SCALE_CONTROL.MAX && currentValue > SCALE_CONTROL.MIN) {
+    valueMin = currentValue - SCALE_CONTROL.STEP;
+    valueScaleInput.setAttribute('value', `${valueMin}%`);
+    setScale(valueMin);
+  }
+};
+
+// Обработчик клика увеличения масштаба фотографии
+const onBtnBiggerScaleClick = () => {
+  const currentValue = Number(valueScaleInput.getAttribute('value').replace('%', ''));
+  let valueMax = '';
+  if (currentValue >= SCALE_CONTROL.MIN && currentValue < SCALE_CONTROL.MAX) {
+    valueMax = currentValue + SCALE_CONTROL.STEP;
+    valueScaleInput.setAttribute('value', `${valueMax}%`);
+    setScale(valueMax);
+  }
+};
 
 // Проверка на нажатую кнопку Esc и закрытие формы редактирования
 const onPopupEscKeydown = (evt) => {
@@ -32,8 +84,12 @@ const onPopupEscKeydown = (evt) => {
 const openFormEditingImg = () => {
   uploadImgForm.classList.remove('hidden');
   document.querySelector('body').classList.add('modal-open');
+  valueScaleInput.setAttribute('value', '100%');
 
+  isOriginalEffect();
   document.addEventListener('keydown', onPopupEscKeydown);
+  btnSmallerScale.addEventListener('click', onBtnSmallerScaleClick);
+  btnBiggerScale.addEventListener('click', onBtnBiggerScaleClick);
 };
 
 // Функция закрытия формы
@@ -41,8 +97,11 @@ function closeFormEditingImg () {
   uploadImgForm.classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');
   clearFormEditing();
+  resetFilterValues();
 
   document.removeEventListener('keydown', onPopupEscKeydown);
+  btnSmallerScale.removeEventListener('click', onBtnSmallerScaleClick);
+  btnBiggerScale.removeEventListener('click', onBtnBiggerScaleClick);
 }
 
 // Обработчик change с показом формы редактирования фото
@@ -60,6 +119,7 @@ function clearFormEditing () {
   uploadImgInput.value = '';
   inputHashtag.value = '';
   inputDescription.value = '';
+  imgUploadPreview.style.transform = 'scale(1)';
 }
 
 // Функция валидации хэш-тегов
@@ -106,3 +166,5 @@ const onInputDescriptionValid = () => {
 };
 
 inputDescription.addEventListener('input', onInputDescriptionValid);
+
+export {uploadImgForm, imgUploadPreview, valueScaleInput, SCALE_CONTROL};
