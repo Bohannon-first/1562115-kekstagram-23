@@ -1,16 +1,12 @@
-import {photosUsersList} from './user_photo.js';
 import {isEscEvent, isOverlayClick} from './util.js';
 
 const NUMBER_COMMENT_SHOWN = 5;
 const bigPicture = document.querySelector('.big-picture');
-const pictures = document.querySelectorAll('.picture');
 const bigPictureImg = bigPicture.querySelector('.big-picture__img img');
 const likesCount = bigPicture.querySelector('.likes-count');
 const commentCount = bigPicture.querySelector('.comments-count');
 const socialCommentList = bigPicture.querySelector('.social__comments');
 const socialCaption = bigPicture.querySelector('.social__caption');
-// const socialCommentCount = bigPicture.querySelector('.social__comment-count');
-// const commentLoader = bigPicture.querySelector('.comments-loader');
 const bigPictureBtnClose = bigPicture.querySelector('.big-picture__cancel');
 const downloadMoreCommentsBtn = bigPicture.querySelector('.comments-loader');
 const commentCountShown = bigPicture.querySelector('.comments-count-shown');
@@ -83,19 +79,17 @@ const getComments = (array) => {
   getQuantityShownComments();
 };
 
-// Наполняем полноэкранную фотографию данными
-const showBigPicture = (photo) => {
-  for (let i = 0; i <= photosUsersList.length - 1; i ++ ) {
-    if (photosUsersList[i].url === photo.getAttribute('src')) {
-      const currentPhoto = photosUsersList[i];
+// Создание большой фотографии и наполнение ее данными
+const showBigPicture = (elem, array) => {
+  for (let i = 0; i <= array.length - 1; i ++ ) {
+    if (array[i].url === elem.getAttribute('src')) {
+      const currentPhoto = array[i];
 
       bigPicture.classList.remove('hidden');
       bigPictureImg.src = currentPhoto.url;
       likesCount.textContent = currentPhoto.likes;
       commentCount.textContent = currentPhoto.comments.length;
       socialCaption.textContent = currentPhoto.description;
-      // socialCommentCount.classList.add('hidden');
-      // commentLoader.classList.add('hidden');
       document.querySelector('body').classList.add('modal-open');
       getComments(currentPhoto.comments);
 
@@ -106,21 +100,22 @@ const showBigPicture = (photo) => {
   }
 };
 
-// Обработчик клика на каждую маленькую фотографию
-pictures.forEach((picture) => {
-  picture.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    const photoElement = evt.target;
-    socialCommentList.innerHTML = '';
-    showBigPicture(photoElement);
+// Навешивание обработчиков клика на каждую маленькую фотографию
+const getClickPhotoItem = (arrayPhotos) => {
+  const pictures = document.querySelectorAll('.picture');
+  pictures.forEach((picture) => {
+    picture.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      const photoElement = evt.target;
+      socialCommentList.innerHTML = '';
+      showBigPicture(photoElement, arrayPhotos);
+    });
   });
-});
+};
 
 // Функция закрытия полноэкранной фотографии
 function bigPictureClose () {
   bigPicture.classList.add('hidden');
-  // socialCommentCount.classList.remove('hidden');
-  // commentLoader.classList.remove('hidden');
   document.querySelector('body').classList.remove('modal-open');
   arrayComments = [];
 
@@ -134,4 +129,4 @@ bigPictureBtnClose.addEventListener('click', () => {
   bigPictureClose();
 });
 
-export {bigPicture};
+export {bigPicture, showBigPicture, getClickPhotoItem};

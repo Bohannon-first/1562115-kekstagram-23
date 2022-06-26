@@ -1,5 +1,7 @@
 import {bigPicture} from './big_photo.js';
 
+const ALERT_SHOW_TIME = 3000;
+
 // Получение рандомного числа из диапазона
 const getRandomNumber = (minNum, maxNum, lengthNum = 0) => {
   if (minNum < 0) {
@@ -18,25 +20,30 @@ const getRandomNumber = (minNum, maxNum, lengthNum = 0) => {
 };
 getRandomNumber();
 
-// Проверка длины строки - моя функция
-// const checkLengthString = (string, maxLength) => {
-//   if (string.length <= maxLength) {
-//     return true;
-//   } else {
-//     return false;
-//   }
-// };
-// // checkLengthString();
-
-// // Проверка длины строки - функция Академии
-// function checkStringLength (string, length) {
-//   return string.length <= length;
-// }
-
-// checkStringLength();
-
 // Проверка на нажатую кнопку Esc
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 const isOverlayClick = (evt) => evt.target === bigPicture;
 
-export {getRandomNumber, isEscEvent, isOverlayClick};
+// Блок с возможной ошибкой запроса данных с сервера
+const showAlert = () => {
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = 1000;
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = 0;
+  alertContainer.style.bottom = '400px';
+  alertContainer.style.right = 0;
+  alertContainer.style.padding = '100px 3px';
+  alertContainer.style.fontSize = '30px';
+  alertContainer.style.color = 'white';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.backgroundColor = 'red';
+  alertContainer.textContent = 'Ошибка загрузки данных';
+
+  document.body.append(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_SHOW_TIME);
+};
+
+export {getRandomNumber, isEscEvent, isOverlayClick, showAlert};
