@@ -1,6 +1,8 @@
 import {picturesContainer} from './user_photo.js';
 import {isEscEvent} from './util.js';
-import {resetFilterValues, isOriginalEffect} from './slider.js';
+import {resetFilterValues, isOriginalEffect, sliderElement, createSlider, elementEffectNone} from './slider.js';
+import {sendData} from './server.js';
+import {showPopupSuccess, showPopupError} from './popup.js';
 
 const MAX_LENGHT_HASHTAG = 20;
 const MAX_HASHTAG_NUMBERS = 5;
@@ -27,6 +29,7 @@ const btnSmallerScale = uploadImgForm.querySelector('.scale__control--smaller');
 const btnBiggerScale = uploadImgForm.querySelector('.scale__control--bigger');
 const valueScaleInput = uploadImgForm.querySelector('.scale__control--value');
 const imgUploadPreview = uploadImgForm.querySelector('.img-upload__preview img');
+const radioEffectsItems = document.querySelectorAll('.effects__radio');
 
 // Шаблон регулярного выражения
 const templateHashtagCommon = /(^#[A-Za-zА-ЯЁа-яё0-9]{0,}$)s*/;
@@ -85,11 +88,22 @@ const openFormEditingImg = () => {
   uploadImgForm.classList.remove('hidden');
   document.querySelector('body').classList.add('modal-open');
   valueScaleInput.setAttribute('value', '100%');
-
+  elementEffectNone.checked = true;
+  createSlider();
   isOriginalEffect();
+
+  // Добавление обработчиков в момент открытия формы
   document.addEventListener('keydown', onPopupEscKeydown);
   btnSmallerScale.addEventListener('click', onBtnSmallerScaleClick);
   btnBiggerScale.addEventListener('click', onBtnBiggerScaleClick);
+  uploadBtnClose.addEventListener('click', closeFormEditingImg);
+};
+
+// Удаление у всех фильтров атрибута checked
+const removeEffect = () => {
+  radioEffectsItems.forEach((effect) => {
+    effect.removeAttribute('checked');
+  });
 };
 
 // Функция закрытия формы
@@ -98,21 +112,25 @@ function closeFormEditingImg () {
   document.querySelector('body').classList.remove('modal-open');
   clearFormEditing();
   resetFilterValues();
+  removeEffect();
 
+  // Удаление обработчиков после закрытия формы
   document.removeEventListener('keydown', onPopupEscKeydown);
   btnSmallerScale.removeEventListener('click', onBtnSmallerScaleClick);
   btnBiggerScale.removeEventListener('click', onBtnBiggerScaleClick);
+  uploadBtnClose.removeEventListener('click', closeFormEditingImg);
+  // Добавление обработчика открытия формы, в случае, если он удален
+  uploadImgInput.addEventListener('change', openFormEditingImg);
 }
 
-// Обработчик change с показом формы редактирования фото
-uploadImgInput.addEventListener('change', () => {
-  openFormEditingImg();
-});
+// Закрытие формы в случае ошибки загрузки данных
+function closeFormEditingImgError () {
+  uploadImgForm.classList.add('hidden');
+  document.querySelector('body').classList.remove('modal-open');
+  uploadImgInput.value = '';
+}
 
-// Обработчик клика закрытия формы редактирования фото
-uploadBtnClose.addEventListener('click', () => {
-  closeFormEditingImg();
-});
+uploadImgInput.addEventListener('change', openFormEditingImg);
 
 // Сброс значения поля выбора файла формы редактирования после ее закрытия
 function clearFormEditing () {
@@ -120,6 +138,8 @@ function clearFormEditing () {
   inputHashtag.value = '';
   inputDescription.value = '';
   imgUploadPreview.style.transform = 'scale(1)';
+  // Уничтожить слайдер
+  sliderElement.noUiSlider.destroy();
 }
 
 // Функция валидации хэш-тегов
@@ -167,4 +187,45 @@ const onInputDescriptionValid = () => {
 
 inputDescription.addEventListener('input', onInputDescriptionValid);
 
-export {uploadImgForm, imgUploadPreview, valueScaleInput, SCALE_CONTROL};
+// Открытие формы редактирования снова, с сохранением всех введенных данных,
+// если при отправке данных произошла ошибка запроса
+const openFormEditingImgAgain = () => {
+  uploadImgForm.classList.remove('hidden');
+  document.querySelector('body').classList.add('modal-open');
+
+  document.addEventListener('keydown', onPopupEscKeydown);
+  btnSmallerScale.addEventListener('click', onBtnSmallerScaleClick);
+  btnBiggerScale.addEventListener('click', onBtnBiggerScaleClick);
+  uploadBtnClose.addEventListener('click', closeFormEditingImg);
+};
+
+// Удаление обычного обработчика открытия формы и добавление нового
+const uploadImgAgain = () => {
+  uploadImgInput.removeEventListener('change', openFormEditingImg);
+  uploadImgInput.addEventListener('change', openFormEditingImgAgain);
+};
+
+// Обработчик отправки формы
+const imgUploadForm = picturesContainer.querySelector('.img-upload__form');
+
+// Обработчик отправки данных на форму
+const setUserFormSubmit = (onSuccess, onFail) => {
+  imgUploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    sendData(
+      () => {
+        onSuccess();
+        showPopupSuccess();
+      },
+      () => {
+        onFail();
+        showPopupError();
+        uploadImgAgain();
+      },
+      new FormData(evt.target),
+    );
+  });
+};
+
+export {uploadImgForm, imgUploadPreview, valueScaleInput, SCALE_CONTROL, setUserFormSubmit, closeFormEditingImg, closeFormEditingImgError};

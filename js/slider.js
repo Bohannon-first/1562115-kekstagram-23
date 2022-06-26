@@ -132,25 +132,27 @@ const onEffectsListClick = (evt) => {
 // Обработчик на родительский контейнер всех фильтров с делегированием
 effectsList.addEventListener('change', onEffectsListClick);
 
-// Создаем слайдер
-noUiSlider.create(sliderElement, {
-  range: {
-    min: 0,
-    max: 100,
-  },
-  start: 100,
-  connect: 'lower',
-  format: {
-    to: function (value) {
-      if (Number.isInteger(value)) {
-        return value.toFixed(0);
-      }
-      return value.toFixed(1);
+// Функция создания слайдера
+const createSlider = () => {
+  noUiSlider.create(sliderElement, {
+    range: {
+      min: 0,
+      max: 100,
     },
-    from: function (value) {
-      return parseFloat(value);
+    start: 100,
+    connect: 'lower',
+    format: {
+      to: function (value) {
+        if (Number.isInteger(value)) {
+          return value.toFixed(0);
+        }
+        return value.toFixed(1);
+      },
+      from: function (value) {
+        return parseFloat(value);
+      },
     },
-  },
-});
+  });
+};
 
-export {resetFilterValues, isOriginalEffect};
+export {resetFilterValues, isOriginalEffect, sliderElement, createSlider, elementEffectNone, effectsList};

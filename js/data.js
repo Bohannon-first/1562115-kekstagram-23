@@ -114,15 +114,6 @@ for (let idItemCounter = ID_COMMENT.MIN; idItemCounter <= ID_COMMENT.MAX; idItem
   arrayIdComments.push(idItemCounter);
 }
 
-// Закомментировано т.к. при таком коде появляются пустые аватарки комментаторов
-// Массив аватаров
-// const arrayAvatars = [];
-
-// // Счётчик заполнения массива аватаров
-// for (let avatarItemCounter = AVATARS.MIN; avatarItemCounter <= AVATARS.MAX; avatarItemCounter++) {
-//   arrayAvatars.push(`img/avatar-${avatarItemCounter}.svg`);
-// }
-
 // Новый временный код для массива аватаров, чтобы не было пустых аватарок
 const arrayAvatars = [
   'img/avatar-1.svg',
@@ -181,4 +172,5 @@ const createPhotos = function () {
 
 const listPhotos = new Array(QUANTITY_DESCRIPTIONS_PHOTOS).fill(null).map(() => createPhotos());
 
+// Экспортирую, чтобы eslint не ругался
 export {listPhotos};
