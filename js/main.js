@@ -7,6 +7,7 @@ import './form.js';
 import './server.js';
 import './popup.js';
 import './filters.js';
+import './upload-photo.js';
 import {getData} from './server.js';
 import {createPhoto} from './user_photo.js';
 import {setUserFormSubmit, closeFormEditingImg} from './form.js';

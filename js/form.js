@@ -207,4 +207,4 @@ const setUserFormSubmit = (onSuccess) => {
   });
 };
 
-export {uploadImgForm, imgUploadPreview, valueScaleInput, SCALE_CONTROL, setUserFormSubmit, closeFormEditingImg, closeFormEditingImgError};
+export {uploadImgForm, imgUploadPreview, valueScaleInput, SCALE_CONTROL, uploadImgInput, setUserFormSubmit, closeFormEditingImg, closeFormEditingImgError};
