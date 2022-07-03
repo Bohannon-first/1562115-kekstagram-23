@@ -3,6 +3,7 @@ import {showAlert} from './util.js';
 
 const urlGetData = 'https://23.javascript.pages.academy/kekstagram/data';
 const urlSendData = 'https://23.javascript.pages.academy/kekstagram';
+const imgFiltersContainer = document.querySelector('.img-filters');
 
 // Получить данные
 const getData = (onSuccess) => {
@@ -14,9 +15,10 @@ const getData = (onSuccess) => {
       }
       throw new Error(`${response.status} ${response.statusText}`);
     })
-    .then((photo) => {
-      onSuccess(photo);
-      getClickPhotoItem(photo);
+    .then((photos) => {
+      onSuccess(photos);
+      getClickPhotoItem(photos);
+      imgFiltersContainer.classList.remove('img-filters--inactive');
     })
     .catch((err) => showAlert(err));
 };

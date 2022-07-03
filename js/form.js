@@ -119,8 +119,6 @@ function closeFormEditingImg () {
   btnSmallerScale.removeEventListener('click', onBtnSmallerScaleClick);
   btnBiggerScale.removeEventListener('click', onBtnBiggerScaleClick);
   uploadBtnClose.removeEventListener('click', closeFormEditingImg);
-  // Добавление обработчика открытия формы, в случае, если он удален
-  uploadImgInput.addEventListener('change', openFormEditingImg);
 }
 
 // Закрытие формы в случае ошибки загрузки данных
@@ -187,29 +185,11 @@ const onInputDescriptionValid = () => {
 
 inputDescription.addEventListener('input', onInputDescriptionValid);
 
-// Открытие формы редактирования снова, с сохранением всех введенных данных,
-// если при отправке данных произошла ошибка запроса
-const openFormEditingImgAgain = () => {
-  uploadImgForm.classList.remove('hidden');
-  document.querySelector('body').classList.add('modal-open');
-
-  document.addEventListener('keydown', onPopupEscKeydown);
-  btnSmallerScale.addEventListener('click', onBtnSmallerScaleClick);
-  btnBiggerScale.addEventListener('click', onBtnBiggerScaleClick);
-  uploadBtnClose.addEventListener('click', closeFormEditingImg);
-};
-
-// Удаление обычного обработчика открытия формы и добавление нового
-const uploadImgAgain = () => {
-  uploadImgInput.removeEventListener('change', openFormEditingImg);
-  uploadImgInput.addEventListener('change', openFormEditingImgAgain);
-};
-
 // Обработчик отправки формы
 const imgUploadForm = picturesContainer.querySelector('.img-upload__form');
 
 // Обработчик отправки данных на форму
-const setUserFormSubmit = (onSuccess, onFail) => {
+const setUserFormSubmit = (onSuccess) => {
   imgUploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
@@ -219,9 +199,8 @@ const setUserFormSubmit = (onSuccess, onFail) => {
         showPopupSuccess();
       },
       () => {
-        onFail();
+        onSuccess();
         showPopupError();
-        uploadImgAgain();
       },
       new FormData(evt.target),
     );
