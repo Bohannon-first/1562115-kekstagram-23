@@ -6,9 +6,9 @@ const pictureTemplate = pictureTemplateContent.querySelector('a');
 const photosUsersFragment = document.createDocumentFragment();
 
 // Создание фотографии из массива с данными
-const createPhoto = (photo) => {
+const createPhoto = (photos) => {
 
-  photo.forEach(({url, likes, comments}) => {
+  photos.forEach(({url, likes, comments}) => {
     const pictureElement = pictureTemplate.cloneNode(true);
     pictureElement.querySelector('.picture__img').src = url;
     pictureElement.querySelector('.picture__likes').textContent = likes;
