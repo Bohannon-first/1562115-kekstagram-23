@@ -125,8 +125,6 @@ function bigPictureClose () {
 }
 
 //  Обработчик закрытия полноэкранной фотографии по клику на крестик
-bigPictureBtnClose.addEventListener('click', () => {
-  bigPictureClose();
-});
+bigPictureBtnClose.addEventListener('click', bigPictureClose);
 
 export {bigPicture, showBigPicture, getClickPhotoItem};

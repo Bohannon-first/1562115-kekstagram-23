@@ -1,4 +1,4 @@
-import {getClickPhotoItem} from './big_photo.js';
+import {getClickPhotoItem} from './big-photo.js';
 import {showAlert} from './util.js';
 
 const urlGetData = 'https://23.javascript.pages.academy/kekstagram/data';

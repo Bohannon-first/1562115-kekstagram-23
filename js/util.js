@@ -1,4 +1,4 @@
-import {bigPicture} from './big_photo.js';
+import {bigPicture} from './big-photo.js';
 
 const ALERT_SHOW_TIME = 3000;
 
@@ -64,6 +64,5 @@ const debounce = (callback, timeoutDelay = 500) => {
     // пока действие совершается чаще, чем переданная задержка timeoutDelay
   };
 };
-
 
 export {getRandomNumber, isEscEvent, isOverlayClick, showAlert, debounce};

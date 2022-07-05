@@ -1,4 +1,4 @@
-import {picturesContainer} from './user_photo.js';
+import {picturesContainer} from './user-photo.js';
 import {isEscEvent} from './util.js';
 import {resetFilterValues, isOriginalEffect, sliderElement, createSlider, elementEffectNone} from './slider.js';
 import {sendData} from './server.js';
@@ -30,6 +30,9 @@ const btnBiggerScale = uploadImgForm.querySelector('.scale__control--bigger');
 const valueScaleInput = uploadImgForm.querySelector('.scale__control--value');
 const imgUploadPreview = uploadImgForm.querySelector('.img-upload__preview img');
 const radioEffectsItems = document.querySelectorAll('.effects__radio');
+
+// Обработчик отправки формы
+const imgUploadForm = picturesContainer.querySelector('.img-upload__form');
 
 // Шаблон регулярного выражения
 const templateHashtagCommon = /(^#[A-Za-zА-ЯЁа-яё0-9]{0,}$)s*/;
@@ -184,9 +187,6 @@ const onInputDescriptionValid = () => {
 };
 
 inputDescription.addEventListener('input', onInputDescriptionValid);
-
-// Обработчик отправки формы
-const imgUploadForm = picturesContainer.querySelector('.img-upload__form');
 
 // Обработчик отправки данных на форму
 const setUserFormSubmit = (onSuccess) => {

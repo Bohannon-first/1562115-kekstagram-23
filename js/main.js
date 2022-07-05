@@ -1,7 +1,6 @@
-import './big_photo.js';
+import './big-photo.js';
 import './util.js';
-import './data.js';
-import './user_photo.js';
+import './user-photo.js';
 import './slider.js';
 import './form.js';
 import './server.js';
@@ -9,11 +8,11 @@ import './popup.js';
 import './filters.js';
 import './upload-photo.js';
 import {getData} from './server.js';
-import {createPhoto} from './user_photo.js';
+import {createPhoto} from './user-photo.js';
 import {setUserFormSubmit, closeFormEditingImg} from './form.js';
 import {onFilterDefaultClick, onFilterRandomClick, onFilterDiscussedClick} from './filters.js';
 import {debounce} from './util.js';
-import {getClickPhotoItem} from './big_photo.js';
+import {getClickPhotoItem} from './big-photo.js';
 
 getData((photos) => {
   createPhoto(photos);

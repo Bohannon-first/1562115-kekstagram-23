@@ -1,11 +1,5 @@
 import {uploadImgForm, imgUploadPreview, valueScaleInput, SCALE_CONTROL} from './form.js';
 
-const sliderContainer = uploadImgForm.querySelector('.img-upload__effect-level');
-const sliderElement = uploadImgForm.querySelector('.effect-level__slider');
-const sliderValueEffect = uploadImgForm.querySelector('.effect-level__value');
-const effectsList = uploadImgForm.querySelector('.effects__list');
-const elementEffectNone = uploadImgForm.querySelector('#effect-none');
-
 // Массив с классами фильтров для фотографий
 const EFFECT_CLASSES_DICTIONARY = {
   'chrome': 'effects__preview--chrome',
@@ -23,6 +17,12 @@ const EFFECT_FILTERS_DICTIONARY = {
   'phobos': 'blur',
   'heat': 'brightness',
 };
+
+const sliderContainer = uploadImgForm.querySelector('.img-upload__effect-level');
+const sliderElement = uploadImgForm.querySelector('.effect-level__slider');
+const sliderValueEffect = uploadImgForm.querySelector('.effect-level__value');
+const effectsList = uploadImgForm.querySelector('.effects__list');
+const elementEffectNone = uploadImgForm.querySelector('#effect-none');
 
 // Переопределение поведения слайдера при разных фильтрах
 const movingSlider = (filterValue) => {
